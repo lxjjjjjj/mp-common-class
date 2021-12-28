@@ -38,7 +38,7 @@ const init = async ({commonStyle, fileRoot, cssName, subpackagefileDir, needAllF
       needAllFileClass && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
     }).then(()=>{
       collectClass(subpackagefiles).then((res)=>{
-        normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
+        !needAllFileClass && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
       })
     })
   })
