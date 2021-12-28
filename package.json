@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/lxjjjjjj/mp-common-class#readme",
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.0",
     "commander": "^8.3.0",
     "fast-glob": "^3.2.7",
     "postcss": "^8.4.5"
