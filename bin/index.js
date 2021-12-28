@@ -8,13 +8,13 @@ const log = console.log
 
 program
   .version(pkg.version)
-  .action(async options => {
-    const [ commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass ] = options
-    console.log('commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass',commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass)
+  .arguments('[args...]')
+  .action(async (args,options) => {
+    const [ commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass ] = args
     const rs = await init({ commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass })
-    if (rs.code !== 0) {
+    if (rs.errno !== 0) {
       log(chalk.red(rs.msg))
-      process.exitCode = rs.code
+      process.exitCode = rs.errno
     } else {
       rs.msg ? log(chalk.yellow(rs.msg)) : log(chalk.green(rs.msg))
     }

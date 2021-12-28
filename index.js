@@ -6,8 +6,6 @@ const { flattenAndUnique } = require('./utils.js')
 
 
 const init = async ({commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass}) =>{
-  console.log('init-------------------------------')
-  console.log('commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass',commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass)
   let errno=0, msg=''
   if(needAllFileClass && !fileRoot){
     msg = '如果是需要提取整个文件的公共样式, 需要写扫描文件入口! 如果不需要可以不传 needAllFileClass 参数'
@@ -26,7 +24,7 @@ const init = async ({commonStyle, fileRoot, cssName, subpackagefileDir, needAllF
   }
 
   if(!commonStyle){
-    commonStyle = `./commonStyle.${cssName}`
+    commonStyle = `./commonStyle`
     msg = '如果没有设定公共样式文件名称，默认为名为commonStyle'
     errno = 0
   }
