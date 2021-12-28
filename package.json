@@ -1,0 +1,26 @@
+{
+  "name": "mp-common-class",
+  "version": "1.0.0",
+  "description": "一个可以提取形如微信小程序项目目录中公共样式的脚本",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lxjjjjjj/mp-common-class.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lxjjjjjj/mp-common-class/issues"
+  },
+  "homepage": "https://github.com/lxjjjjjj/mp-common-class#readme",
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "fast-glob": "^3.2.7",
+    "postcss": "^8.4.5",
+    "shelljs": "^0.8.4"
+  }
+}
