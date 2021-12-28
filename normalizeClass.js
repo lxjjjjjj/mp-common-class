@@ -6,8 +6,10 @@ const fs = require('fs');
  * 将分包中的公共样式输出到分包的公共样式文件中
  * @param subpackageFiles 分包下的样式文件列表
  * @param commonClass 属于这个分包的公共样式
+ * @param commonStyle 输出文件的名称
+ * @param cssName 输出文件的后缀
  */
-const normalizeSubpackageClass = (subpackageFiles,commonClass) => {
+const normalizeSubpackageClass = (subpackageFiles, commonClass, commonStyle, cssName) => {
   for(let subpackage in subpackageFiles){
     let subpackageCommonRoot = postcss.parse('')
     for(let i in commonClass[subpackage]) { commonClass[subpackage][i] = 1 }
@@ -17,13 +19,13 @@ const normalizeSubpackageClass = (subpackageFiles,commonClass) => {
         postcss(postCssNormallize({
           subpackageCommonRoot,
           commonClass:commonClass[subpackage],
-          importClass:path.join(subpackage,`${commonStyle}`)
+          importClass:path.join(subpackage,`${commonStyle}.${cssName}`)
         })).process(data).then(function(res){
           fs.writeFile(`${file}`, res.css,() => {
             if (err) throw err;
             // console.log('The file has been saved!');
           })
-          fs.writeFile(path.join(subpackage,`${commonStyle}`),subpackageCommonRoot.toString(),()=>{
+          fs.writeFile(path.join(subpackage,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
             if (err) throw err;
             // console.log('The file has been saved!');
           })
@@ -38,8 +40,10 @@ const normalizeSubpackageClass = (subpackageFiles,commonClass) => {
  * @param files 主包和分包中的公共样式
  * @param commonClass 属于这个分包的公共样式
  * @param importClass 公共样式文件的路径
+ * @param commonStyle 公共样式文件的名称
+ * @param cssName 公共样式文件的后缀
  */
-const normalizeClass = async (files,commonClass,importClass) => {
+const normalizeClass = async (files,commonClass,importClass,commonStyle,cssName) => {
   for(let i in commonClass) { commonClass[i] = 1 }
   let subpackageCommonRoot = postcss.parse('')
   for(let fileName in files){
@@ -49,13 +53,13 @@ const normalizeClass = async (files,commonClass,importClass) => {
         postcss(postCssNormallize({
           subpackageCommonRoot,
           commonClass:commonClass,
-          importClass:path.join(importClass,`${commonStyle}`)
+          importClass:path.join(importClass,`${commonStyle}.${cssName}`)
         })).process(data).then(function(res){
           fs.writeFile(`${file}`,res.css,()=>{
             if (err) throw err;
             // console.log('The file has been saved!');
           })
-          fs.writeFile(path.join(importClass,`${commonStyle}`),subpackageCommonRoot.toString(),()=>{
+          fs.writeFile(path.join(importClass,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
             if (err) throw err;
             // console.log('The file has been saved!');
           })
