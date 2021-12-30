@@ -5,14 +5,14 @@ const { normalizeFiles } = require('./normalizeFiles.js')
 const { flattenAndUnique } = require('./utils.js')
 
 
-const init = async ({commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass}) =>{
+const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage}) =>{
   let errno=0, msg=''
-  if(needAllFileClass && !fileRoot){
-    msg = '如果是需要提取整个文件的公共样式, 需要写扫描文件入口! 如果不需要可以不传 needAllFileClass 参数'
+  if(mainPackage && !fileRoot){
+    msg = '如果是需要提取整个文件的公共样式, 需要写扫描文件入口! 如果不需要可以不传 mainPackage 参数'
     errno = 1
   }
 
-  if(subpackagefileDir && !subpackagefileDir.length && !fileRoot){
+  if(subPackage && !specSubPackage.length && !fileRoot){
     msg = '如果是需要提取所有分包的公共样式, 需要写扫描文件入口! 如果提取部分分包的公共样式需要添加 subpackagefileDir 参数'
     errno = 2
   }
@@ -29,16 +29,16 @@ const init = async ({commonStyle, fileRoot, cssName, subpackagefileDir, needAllF
     errno = 0
   }
 
-  needAllFileClass = needAllFileClass === 'false' ? false : needAllFileClass
+  mainPackage = mainPackage === 'false' ? false : mainPackage
 
-  await normalizeFiles({fileRoot, cssName, subpackagefileDir, needAllFileClass}).then(res=>{
+  await normalizeFiles({fileRoot, cssName, mainPackage, subPackage, specSubPackage}).then(res=>{
     const {mainfiles, subpackagefiles} = res
     Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
       const files = Object.assign({},subpackagefiles,mainfiles)
-      needAllFileClass && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
+      mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
     }).then(()=>{
       collectClass(subpackagefiles).then((res)=>{
-        !needAllFileClass && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
+        subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
       })
     })
   })

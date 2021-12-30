@@ -5,12 +5,13 @@ const { scanFiles } = require('./utils.js')
 /**
  * 返回分包目录以及主包特定目录下的所有样式文件
  * @param cssName css文件的后缀名
- * @param subpackagefileDir 需要扫描的几个分包目录
  * @param fileRoot 入口文件夹名称
- * @param needAllFileClass 是否需要提取主包和分包的公共样式
+ * @param mainPackage 是否提取主包样式
+ * @param subPackage 是否提取分包样式
+ * @param specSubPackage 指定的部分分包数组
  * @returns {Object} 
  */
-const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', subpackagefileDir = [], needAllFileClass = false}) => {
+const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', mainPackage = false, subPackage = false, specSubPackage = []}) => {
   let files = {}
   let subPackagesDir = []
   let mainDir = []
@@ -33,14 +34,16 @@ const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', subpackagefileDi
     })
   }
 
-  if(needAllFileClass && !subpackagefileDir.length){ //扫描所有样式文件
-    files = scanFiles(mainDir, subPackagesDir, cssName, fileRoot)
-  }else if(needAllFileClass && subpackagefileDir.length){ //扫描部分分包和总目录下所有样式文件
+  if(mainPackage && !subPackage){ //只提取主包的样式
+    files = scanFiles(mainDir, [], cssName, fileRoot)
+  }else if(mainPackage && subPackage && specSubPackage.length){ //提取主包和部分分包的样式
     files = scanFiles(mainDir, subpackagefileDir, cssName, fileRoot)
-  }else if(!needAllFileClass && subpackagefileDir.length){ //只需要扫描部分分包 
+  }else if(mainPackage && subPackage && !specSubPackage.length){ //提取主包和全部分包的样式
+    files = scanFiles([], subPackagesDir, cssName, fileRoot)
+  }else if(!mainPackage && subPackage && !specSubPackage.length){ //只提取全部分包样式
     files = scanFiles([], subpackagefileDir, cssName)
-  }else if(!needAllFileClass && !subpackagefileDir.length){ //扫描全部分包不扫描主包
-    files = scanFiles([], subPackagesDir, cssName)
+  }else if(!mainPackage && subPackage && specSubPackage.length){ //只提取部分分包样式
+    files = scanFiles([], specSubPackage, cssName)
   }
   return new Promise((resolve,reject)=>{
     resolve(files)

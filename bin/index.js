@@ -10,8 +10,8 @@ program
   .version(pkg.version)
   .arguments('[args...]')
   .action(async (args,options) => {
-    const [ commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass ] = args
-    const rs = await init({ commonStyle, fileRoot, cssName, subpackagefileDir, needAllFileClass })
+    const [ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage ] = args
+    const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage })
     if (rs.errno !== 0) {
       log(chalk.red(rs.msg))
       process.exitCode = rs.errno
