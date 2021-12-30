@@ -39,7 +39,26 @@ const scanFiles = (mainDirs, subpackageDirs, cssName, fileRoot) => {
     subpackagefiles
   }
 }
-
+/**
+ * 扫描文件目录下的样式文件
+ * @param fileLength 当前文件的文件路径
+ * @param classLength 公共样式的文件路径
+ * @returns {Number} 
+ */
+const initDeep = (fileLength, classLength) => {
+  let pathDeep = ''
+  let len = fileLength - classLength
+  if(len === 0){
+    pathDeep = './'
+  }else{
+    for(let i=0; i<len; i++){
+      pathDeep += '../'
+    }
+  }
+  return pathDeep
+}
 module.exports.flattenAndUnique = flattenAndUnique
 
 module.exports.scanFiles = scanFiles
+
+module.exports.initDeep = initDeep

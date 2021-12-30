@@ -1,7 +1,7 @@
 const postcss = require('postcss');
 const path = require('path');
 const fs = require('fs');
-
+const { initDeep } = require('./utils')
 /**
  * 将分包中的公共样式输出到分包的公共样式文件中
  * @param subpackageFiles 分包下的样式文件列表
@@ -14,12 +14,15 @@ const normalizeSubpackageClass = (subpackageFiles, commonClass, commonStyle, css
     let subpackageCommonRoot = postcss.parse('')
     for(let i in commonClass[subpackage]) { commonClass[subpackage][i] = 1 }
     subpackageFiles[subpackage].map((file) => {
+      const fileLength = file.split('/').length
+      const classLength = path.join(subpackage,`${commonStyle}.${cssName}`).split('/').length
+      const len = initDeep(fileLength,classLength)
       fs.readFile(file, (err,data) => {
         if(err) throw err
         postcss(postCssNormallize({
           subpackageCommonRoot,
           commonClass:commonClass[subpackage],
-          importClass:path.join(subpackage,`${commonStyle}.${cssName}`)
+          importClass:`${len}${commonStyle}.${cssName}`
         })).process(data).then(function(res){
           fs.writeFile(`${file}`, res.css,() => {
             if (err) throw err;
@@ -48,12 +51,15 @@ const normalizeClass = async (files,commonClass,importClass,commonStyle,cssName)
   let subpackageCommonRoot = postcss.parse('')
   for(let fileName in files){
     files[fileName].map((file)=>{
+      const fileLength = file.split('/').length
+      const classLength = path.join(importClass,`${commonStyle}.${cssName}`).split('/').length
+      const len = initDeep(fileLength,classLength)
       fs.readFile(file, (err,data)=>{
         if(err) throw err
         postcss(postCssNormallize({
           subpackageCommonRoot,
           commonClass:commonClass,
-          importClass:path.join(importClass,`${commonStyle}.${cssName}`)
+          importClass:`${len}${commonStyle}.${cssName}`
         })).process(data).then(function(res){
           fs.writeFile(`${file}`,res.css,()=>{
             if (err) throw err;

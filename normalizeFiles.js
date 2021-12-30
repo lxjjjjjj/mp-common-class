@@ -37,11 +37,11 @@ const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', mainPackage = fa
   if(mainPackage && !subPackage){ //只提取主包的样式
     files = scanFiles(mainDir, [], cssName, fileRoot)
   }else if(mainPackage && subPackage && specSubPackage.length){ //提取主包和部分分包的样式
-    files = scanFiles(mainDir, subpackagefileDir, cssName, fileRoot)
+    files = scanFiles(mainDir, specSubPackage, cssName, fileRoot)
   }else if(mainPackage && subPackage && !specSubPackage.length){ //提取主包和全部分包的样式
-    files = scanFiles([], subPackagesDir, cssName, fileRoot)
+    files = scanFiles(mainDir, subPackagesDir, cssName, fileRoot)
   }else if(!mainPackage && subPackage && !specSubPackage.length){ //只提取全部分包样式
-    files = scanFiles([], subpackagefileDir, cssName)
+    files = scanFiles([], subPackagesDir, cssName)
   }else if(!mainPackage && subPackage && specSubPackage.length){ //只提取部分分包样式
     files = scanFiles([], specSubPackage, cssName)
   }

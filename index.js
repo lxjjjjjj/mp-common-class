@@ -12,7 +12,7 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
     errno = 1
   }
 
-  if(subPackage && !specSubPackage.length && !fileRoot){
+  if(subPackage && specSubPackage &&!specSubPackage.length && !fileRoot){
     msg = '如果是需要提取所有分包的公共样式, 需要写扫描文件入口! 如果提取部分分包的公共样式需要添加 subpackagefileDir 参数'
     errno = 2
   }
@@ -24,12 +24,13 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
   }
 
   if(!commonStyle){
-    commonStyle = `./commonStyle`
+    commonStyle = `commonStyle`
     msg = '如果没有设定公共样式文件名称，默认为名为commonStyle'
     errno = 0
   }
 
   mainPackage = mainPackage === 'false' ? false : mainPackage
+  subPackage = subPackage === 'false' ? false : subPackage
 
   await normalizeFiles({fileRoot, cssName, mainPackage, subPackage, specSubPackage}).then(res=>{
     const {mainfiles, subpackagefiles} = res
