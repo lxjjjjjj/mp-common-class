@@ -16,9 +16,19 @@ fileRoot 项目总目录 默认为空
 
 cssName css文件后缀 默认wxss
 
-subpackagefileDir 分包目录 默认空数组
+mainPackage 是否需要将主包中的样式提取出来 是传true 否传false 默认false
 
-needAllFileClass 是否需要将主包和分包中的样式提取出来 是传true 否传false 默认false
+subPackage 是否需要将分包中的样式提取到分包中 是传true 否传false 默认false
+
+specSubPackage 指定的分包目录 如果无需指定传空数组即可
+
+mainPackage 主包 | subPackage分包 | specSubPackage 指定分包 | 结果
+---|--- | --- | ---
+true | false | [] | 只提取主包样式
+true | true | [] | 主包+全部分包
+true | true | ['subpackage1'] | 主包+指定分包
+false | true | [] | 分包
+false | true | ['subpackage1'] | 指定分包
 
 ### 使用
 
