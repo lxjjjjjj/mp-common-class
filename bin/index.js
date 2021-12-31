@@ -18,10 +18,10 @@ program
     const alreadyScanFiles = options.alreadyScanFiles
     const [ commonStyle, fileRoot, cssName, specSubPackage, classObj ] = args
     log(chalk.yellow('==========mp-common-class compile start=========='))
-    console.time('mp-common-class build start time')
+    console.time('mp-common-class build time')
     const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage, alreadyScanFiles, classObj })
     log(chalk.yellow('==========mp-common-class compile end=========='))
-    console.timeEnd('mp-common-class build end time')
+    console.timeEnd('mp-common-class build time')
     if (rs.errno !== 0) {
       log(chalk.red(rs.msg))
       process.exitCode = rs.errno

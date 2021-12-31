@@ -11,11 +11,34 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
   if(mainPackage && !fileRoot){
     msg = '如果是需要提取整个文件的公共样式, 需要写扫描文件入口! 如果不需要可以不传 mainPackage 参数'
     errno = 1
+    return new Promise((resolve, reject)=>{
+      resolve({
+        msg,
+        errno
+      })
+    })
   }
 
   if(subPackage && specSubPackage &&!specSubPackage.length && !fileRoot){
     msg = '如果是需要提取所有分包的公共样式, 需要写扫描文件入口! 如果提取部分分包的公共样式需要添加 subpackagefileDir 参数'
     errno = 2
+    return new Promise((resolve, reject)=>{
+      resolve({
+        msg,
+        errno
+      })
+    })
+  }
+
+  if(!subPackage && !mainPackage && !alreadyScanFiles){
+    msg = '如果既不扫描主包也不扫描分包，请提供扫描之后的数据'
+    errno = 3
+    return new Promise((resolve, reject)=>{
+      resolve({
+        msg,
+        errno
+      })
+    })
   }
 
   if(!cssName){
@@ -30,13 +53,12 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
     errno = 0
   }
 
-  mainPackage = mainPackage === 'false' ? false : mainPackage
-  subPackage = subPackage === 'false' ? false : subPackage
 
   if(alreadyScanFiles){
-    const { mainfiles, subpackagefiles } = classObj
-    await mainPackage && normalizeClass(classObj,compareClass(flattenAndUnique(classObj, fileRoot)),fileRoot, commonStyle, cssName)
-    subPackage && normalizeSubpackageClass(subpackageClass, compareSubpackageClass(res), commonStyle, cssName)
+    const { mainfiles, subpackagefiles, mainClass, subpackageClass } = classObj
+    const files = Object.assign({},subpackagefiles,mainfiles)
+    await mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},mainClass,subpackageClass), fileRoot)),fileRoot, commonStyle, cssName)
+    subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(subpackageClass), commonStyle, cssName)
   }else{
     await normalizeFiles({fileRoot, cssName, mainPackage, subPackage, specSubPackage}).then(res=>{
       const {mainfiles, subpackagefiles} = res
