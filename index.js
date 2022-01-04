@@ -5,7 +5,7 @@ const { normalizeFiles } = require('./normalizeFiles.js')
 const { flattenAndUnique } = require('./utils.js')
 
 
-const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage, alreadyScanFiles, classObj}) =>{
+const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage }) =>{
   let errno = 0, msg = '编译完成'
 
   if(mainPackage && !fileRoot){
@@ -30,8 +30,8 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
     })
   }
 
-  if(!subPackage && !mainPackage && !alreadyScanFiles){
-    msg = '如果既不扫描主包也不扫描分包，请提供扫描之后的数据'
+  if(!subPackage && !mainPackage){
+    msg = '请设置扫描主包或者分包'
     errno = 3
     return new Promise((resolve, reject)=>{
       resolve({
@@ -54,24 +54,18 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
   }
 
 
-  if(alreadyScanFiles){
-    const { mainfiles, subpackagefiles, mainClass, subpackageClass } = classObj
-    const files = Object.assign({},subpackagefiles,mainfiles)
-    await mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},mainClass,subpackageClass), fileRoot)),fileRoot, commonStyle, cssName)
-    subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(subpackageClass), commonStyle, cssName)
-  }else{
-    await normalizeFiles({fileRoot, cssName, mainPackage, subPackage, specSubPackage}).then(res=>{
-      const {mainfiles, subpackagefiles} = res
-      Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
-        const files = Object.assign({},subpackagefiles,mainfiles)
-        mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
-      }).then(()=>{
-        collectClass(subpackagefiles).then((res)=>{
-          subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
-        })
+  
+  await normalizeFiles({fileRoot, cssName, mainPackage, subPackage, specSubPackage}).then(res=>{
+    const {mainfiles, subpackagefiles} = res
+    Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
+      const files = Object.assign({},subpackagefiles,mainfiles)
+      mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
+    }).then(()=>{
+      collectClass(subpackagefiles).then((res)=>{
+        subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
       })
     })
-  }
+  })
   return new Promise((resolve, reject)=>{
     resolve({
       msg,

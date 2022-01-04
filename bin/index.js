@@ -11,15 +11,13 @@ program
   .arguments('[args...]')
   .option('-m, --main', 'collect main and subpackage class', false)
   .option('-s, --subPackage', 'collect subpackage class', false)
-  .option('-a, --alreadyScanFiles', 'already collected all class', false)
   .action(async (args, options) => {
     const mainPackage = options.main
     const subPackage = options.subPackage
-    const alreadyScanFiles = options.alreadyScanFiles
-    const [ commonStyle, fileRoot, cssName, specSubPackage, classObj ] = args
+    const [ commonStyle, fileRoot, cssName, specSubPackage ] = args
     log(chalk.yellow('==========mp-common-class compile start=========='))
     console.time('mp-common-class build time')
-    const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage, alreadyScanFiles, classObj })
+    const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage })
     log(chalk.yellow('==========mp-common-class compile end=========='))
     console.timeEnd('mp-common-class build time')
     if (rs.errno !== 0) {
