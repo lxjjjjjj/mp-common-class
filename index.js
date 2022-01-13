@@ -74,4 +74,17 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
   })
 }
 
-module.exports = init
+const getCommonClass = (mainfiles, subpackagefiles, fileRoot, commonStyle, cssName) => {
+  Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
+    const files = Object.assign({},subpackagefiles,mainfiles)
+    Object.keys(mainfiles).length && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
+  }).then(()=>{
+    collectClass(subpackagefiles).then((res)=>{
+      Object.keys(subpackagefiles).length && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
+    })
+  })
+}
+module.exports = {
+  init,
+  getCommonClass
+}

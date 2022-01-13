@@ -86,14 +86,19 @@ const postCssNormallize = (options = {})  => {
     postcssPlugin:'postcss-delete-add',
     Rule(node) {
       if(node.parent.type === 'root'){
-        if(commonClass[node.selector]){
+        let commonRule = node.selector
+        node.nodes.forEach((rule)=>{
+          commonRule += rule.prop
+          commonRule += rule.value
+        })
+        if(commonClass[commonRule]){
           if(!appendImport){
             appendImport = true
             node.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${importClass}\"` }))
           }
-          commonClass[node.selector] === 1 && subpackageCommonRoot.append(node.clone())
+          commonClass[commonRule] === 1 && subpackageCommonRoot.append(node.clone())
           node.parent.removeChild(node)
-          commonClass[node.selector] = commonClass[node.selector] + 1
+          commonClass[commonRule] = commonClass[commonRule] + 1
         }
       }
     },

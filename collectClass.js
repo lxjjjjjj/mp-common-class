@@ -4,10 +4,10 @@ const fs = require('fs');
 /**
  * 收集文件中所有class节点
  * @param Files 不同分包或者主包下的文件
- * @returns {Object} 返回所有文件下的样式数组
+ * @returns {Object} 返回所有文件下的样式集合
  */
 const collectClass = async (Files) => {
-  if(!Object.keys(Files).length) return 
+  if(!Object.keys(Files).length) return
 
   let AllClass = {}
   let promiseArr = []
@@ -52,7 +52,12 @@ const postCssCollect = (options = {})  => {
     postcssPlugin:'postcss-get-common',
     Rule(node) {
       if(node.parent.type === 'root'){
-        classCollection.push(node.selector)
+        let commonRule = node.selector
+        node.nodes.forEach((rule)=>{
+          commonRule += rule.prop
+          commonRule += rule.value
+        })
+        classCollection.push(commonRule)
       }
     },
     AtRule: {
