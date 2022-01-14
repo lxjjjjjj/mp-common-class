@@ -74,13 +74,16 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
   })
 }
 
-const getCommonClass = ({weight,css,commonCssName,mainfile,subpackageArr}) => {
-  let subpackagefiles = {}
+const getCommonClass = ({weight,css,commonCssName,outputFilePath,subpackageArr}) => {
+  if(!subpackageArr.length) return 
+  let files = {}
   subpackageArr.length && subpackageArr.forEach(item=>{
-    subpackagefiles[item] = [item + '/' + css]
+    files[item] = [item + '/' + css]
   })
   let [ commonStyle, cssName ] = commonCssName.split('.')
-  normalizeClass(files,compareClass(flattenAndUnique(res,mainfile), weight),mainfile, commonStyle, cssName)
+  collectClass(files).then((res)=>{
+    normalizeClass(files,compareClass(flattenAndUnique(res,outputFilePath), weight),outputFilePath, commonStyle, cssName)
+  })
 }
 module.exports = {
   init,
