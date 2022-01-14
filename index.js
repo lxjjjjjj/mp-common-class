@@ -77,13 +77,13 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
 const getCommonClass = ({weight,css,commonCssName,mainfile,subpackageArr}) => {
   let mainfiles = mainfile ? {[mainfile]: mainfile + css} : {}
   let subpackagefiles = {}
-  subpackageArr.forEach(item=>{
+  subpackageArr.length && subpackageArr.forEach(item=>{
     subpackagefiles[item] = subpackagefiles[item] + css
   })
   let [ commonStyle, cssName ] = commonCssName.split('.')
   Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
     const files = Object.assign({},subpackagefiles,mainfiles)
-    Object.keys(mainfiles).length && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), mainfile, weight)),fileRoot, commonStyle, cssName)
+    Object.keys(mainfiles).length && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), mainfile, weight)),mainfile, commonStyle, cssName)
   }).then(()=>{
     collectClass(subpackagefiles).then((res)=>{
       Object.keys(subpackagefiles).length && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
