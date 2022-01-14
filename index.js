@@ -78,7 +78,8 @@ const getCommonClass = ({weight,css,commonCssName,mainfile,subpackageArr}) => {
   let mainfiles = mainfile ? {[mainfile]: mainfile + css} : {}
   let subpackagefiles = {}
   subpackageArr.length && subpackageArr.forEach(item=>{
-    subpackagefiles[item] = subpackagefiles[item] + css
+    subpackagefiles[item] = []
+    subpackagefiles[item].push(subpackagefiles[item] + css)
   })
   let [ commonStyle, cssName ] = commonCssName.split('.')
   Promise.all([collectClass(mainfiles),collectClass(subpackagefiles)]).then((res)=>{
