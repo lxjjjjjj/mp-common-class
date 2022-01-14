@@ -86,7 +86,7 @@ const getCommonClass = ({weight,css,commonCssName,mainfile,subpackageArr}) => {
     Object.keys(mainfiles).length && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), mainfile), weight),mainfile, commonStyle, cssName)
   }).then(()=>{
     collectClass(subpackagefiles).then((res)=>{
-      Object.keys(subpackagefiles).length && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res, weight), commonStyle, cssName)
+      !Object.keys(mainfiles).length && Object.keys(subpackagefiles).length && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res, weight), commonStyle, cssName)
     })
   })
 }
