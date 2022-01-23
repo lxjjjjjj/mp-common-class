@@ -1,10 +1,11 @@
 {
   "name": "mp-common-class",
-  "version": "1.0.0-beta20",
+  "version": "1.0.0-beta21",
   "description": "一个可以提取形如微信小程序项目目录中公共样式的脚本",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"rollup -c rollup.config.js"
   },
   "bin": {
     "mpCommonClass": "bin/index.js"
@@ -20,10 +21,15 @@
     "url": "https://github.com/lxjjjjjj/mp-common-class/issues"
   },
   "homepage": "https://github.com/lxjjjjjj/mp-common-class#readme",
-  "dependencies": {
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
     "chalk": "^4.1.0",
     "commander": "^8.3.0",
     "fast-glob": "^3.2.7",
-    "postcss": "^8.4.5"
+    "postcss": "^8.4.5",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-uglify": "6.0.4"
   }
 }
