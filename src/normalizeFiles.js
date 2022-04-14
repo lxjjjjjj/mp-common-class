@@ -16,9 +16,9 @@ const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', mainPackage = fa
   let subPackagesDir = []
   let mainDir = []
   let allDir = []
-  
+  const dirPath = process.cwd()
   if(fileRoot){
-    const data = await fsPromise.readFile(path.resolve(fileRoot, './app.json'), 'utf8')
+    const data = await fsPromise.readFile(path.resolve(dirPath, fileRoot, './app.json'), 'utf8')
     const jsonObject = JSON.parse(data)
 
     jsonObject.subPackages.forEach(subpackage=>{
