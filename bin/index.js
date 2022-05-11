@@ -15,7 +15,8 @@ program
     const mainPackage = options.main
     const subPackage = options.subPackage
     const [ commonStyle, fileRoot, cssName, specSubPackage ] = args
-    const specSubPackageList = specSubPackage.split(',')
+    let specSubPackageList = []
+    specSubPackage && (specSubPackageList = specSubPackage.split(','))
     log(chalk.yellow('==========mp-common-class compile start=========='))
     console.time('mp-common-class build time')
     const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage:specSubPackageList })

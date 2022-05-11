@@ -9,7 +9,7 @@ const { initDeep } = require('./utils')
  * @param commonStyle 输出文件的名称
  * @param cssName 输出文件的后缀
  */
-const normalizeSubpackageClass = (subpackageFiles, commonClass, commonStyle, cssName) => {
+const normalizeSubpackageClass = (fileRoot, subpackageFiles, commonClass, commonStyle, cssName) => {
   for(let subpackage in subpackageFiles){
     let subpackageCommonRoot = postcss.parse('')
     for(let i in commonClass[subpackage]) { commonClass[subpackage][i] = 1 }
@@ -28,7 +28,7 @@ const normalizeSubpackageClass = (subpackageFiles, commonClass, commonStyle, css
             if (err) throw err;
             // console.log('The file has been saved!');
           })
-          fs.writeFile(path.join(subpackage,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
+          fs.writeFile(path.join(fileRoot, subpackage,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
             if (err) throw err;
             // console.log('The file has been saved!');
           })
