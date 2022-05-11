@@ -82,6 +82,10 @@ const postCssCollect = (options = {})  => {
           })
         })
         classCollection.push(commonRule)
+      },
+      import: (atRule) => {
+        let commonRule = atRule.name + atRule.params 
+        classCollection.push(commonRule)
       }
     }
   }

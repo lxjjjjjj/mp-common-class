@@ -62,7 +62,7 @@ const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, sp
       mainPackage && normalizeClass(files,compareClass(flattenAndUnique(Object.assign({},res[0],res[1]), fileRoot)),fileRoot, commonStyle, cssName)
     }).then(()=>{
       collectClass(subpackagefiles).then((res)=>{
-        subPackage && normalizeSubpackageClass(mainPackage, subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
+        subPackage && normalizeSubpackageClass(subpackagefiles, compareSubpackageClass(res), commonStyle, cssName)
       })
     })
   })
