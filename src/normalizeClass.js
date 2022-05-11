@@ -9,7 +9,7 @@ const { initDeep } = require('./utils')
  * @param commonStyle 输出文件的名称
  * @param cssName 输出文件的后缀
  */
-const normalizeSubpackageClass = (fileRoot, subpackageFiles, commonClass, commonStyle, cssName) => {
+const normalizeSubpackageClass = (mainPackage, subpackageFiles, commonClass, commonStyle, cssName) => {
   for(let subpackage in subpackageFiles){
     let subpackageCommonRoot = postcss.parse('')
     for(let i in commonClass[subpackage]) { commonClass[subpackage][i] = 1 }
@@ -17,18 +17,22 @@ const normalizeSubpackageClass = (fileRoot, subpackageFiles, commonClass, common
       const fileLength = file.split('/').length
       const classLength = path.join(subpackage,`${commonStyle}.${cssName}`).split('/').length
       const len = initDeep(fileLength,classLength)
+      mainDir = subpackage.split('/').splice(0,2).join('/')
+      mainLength = path.join(`${mainDir}.${commonStyle}.${cssName}`).split('/').length
+      mainPackage && (mainLen = initDeep(fileLength, mainLength))
       fs.readFile(file, (err,data) => {
         if(err) throw err
         postcss(postCssNormallize({
           subpackageCommonRoot,
           commonClass:commonClass[subpackage],
-          importClass:`${len}${commonStyle}.${cssName}`
+          importClass:`${len}${commonStyle}.${cssName}`,
+          mainImportClass:`${mainLen}${commonStyle}.${cssName}`
         })).process(data).then(function(res){
           fs.writeFile(`${file}`, res.css,() => {
             if (err) throw err;
             // console.log('The file has been saved!');
           })
-          fs.writeFile(path.join(fileRoot, subpackage,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
+          fs.writeFile(path.join(subpackage,`${commonStyle}.${cssName}`),subpackageCommonRoot.toString(),()=>{
             if (err) throw err;
             // console.log('The file has been saved!');
           })
@@ -95,6 +99,7 @@ const postCssNormallize = (options = {})  => {
           if(!appendImport){
             appendImport = true
             node.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${importClass}\"` }))
+            atRule.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${mainImportClass}\"` }))
           }
           commonClass[commonRule] === 1 && subpackageCommonRoot.append(node.clone())
           node.parent.removeChild(node)
@@ -116,6 +121,7 @@ const postCssNormallize = (options = {})  => {
           if(!appendImport){
             appendImport = true
             atRule.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${importClass}\"` }))
+            atRule.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${mainImportClass}\"` }))
           }
           commonClass[commonAtRule] === 1 && subpackageCommonRoot.append(atRule.clone())
           atRule.parent.removeChild(atRule)
@@ -135,6 +141,7 @@ const postCssNormallize = (options = {})  => {
           if(!appendImport){
             appendImport = true
             atRule.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${importClass}\"` }))
+            atRule.parent.prepend(new postcss.AtRule({ name: 'import', params: `\"${mainImportClass}\"` }))
           }
           commonClass[commonAtRule] === 1 && subpackageCommonRoot.append(atRule.clone())
           atRule.parent.removeChild(atRule)
