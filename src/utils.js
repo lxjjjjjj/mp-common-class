@@ -32,7 +32,7 @@ const scanFiles = (mainDirs, subpackageDirs, cssName, fileRoot) => {
     mainfiles[`${fileRoot}`] = mainfiles[`${fileRoot}`].concat(fg.sync([`${dir}/**/*.${cssName}`]))
   })
   subpackageDirs.length && subpackageDirs.forEach(dir=>{
-    subpackagefiles[dir]=fg.sync([`${fileRoot}/${dir}/**/**/*.${cssName}`]);
+    subpackagefiles[dir]=fg.sync([`${dir}/**/**/*.${cssName}`]);
   })
   return {
     mainfiles,

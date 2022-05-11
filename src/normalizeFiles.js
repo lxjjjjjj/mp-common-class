@@ -32,6 +32,12 @@ const normalizeFiles = async ({fileRoot = '', cssName = 'wxss', mainPackage = fa
         mainDir.push(alldir)
       }
     })
+  } else if(!mainPackage && !specSubPackage.length && subPackage){
+    jsonObject.subPackages.forEach(subpackage=>{
+      subPackagesDir.push(fileRoot + '/' +subpackage.root)
+    })
+  } else if(!mainPackage && subPackage && specSubPackage.length){
+    specSubPackage = specSubPackage.map(subpackage=>`${fileRoot}/${subpackage}`)
   }
 
   if(mainPackage && !subPackage){ //只提取主包的样式
