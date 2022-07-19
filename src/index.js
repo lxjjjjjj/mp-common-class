@@ -1,9 +1,11 @@
 const { collectClass } = require('./collectClass.js')
-const { compareSubpackageClass, compareClass} = require('./compareClass.js')
+const { compareSubpackageClass, compareClass, writeAtomicClass} = require('./compareClass.js')
 const { normalizeSubpackageClass, normalizeClass} = require('./normalizeClass.js')
 const { normalizeFiles } = require('./normalizeFiles.js')
 const { flattenAndUnique } = require('./utils.js')
-
+const { collectAtomicClass } = require('./collectAtomicClass')
+const fs = require('fs')
+const path = require('path')
 
 const init = async ({commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage }) =>{
   let errno = 0, msg = '编译完成'
@@ -85,7 +87,37 @@ const getCommonClass = ({weight,css,commonCssName,outputFilePath,subpackageArr})
     normalizeClass(files,compareClass(flattenAndUnique(res,outputFilePath), weight),outputFilePath, commonStyle, cssName)
   })
 }
+
+const extractAtomicClass = async ({ fileRoot, specSubPackage, cssName }) => {
+  let errno = 0, msg = '编译完成'
+  console.log('fileRoot, specSubPackage, cssName', fileRoot, specSubPackage, cssName)
+  if (!specSubPackage) {
+    msg = '请设置扫描的分包'
+    errno = 1
+  } else {
+    await normalizeFiles({fileRoot, cssName, subPackage: true, specSubPackage: specSubPackage.split('/')}).then(res=>{
+      const { subpackagefiles } = res
+      collectAtomicClass(subpackagefiles).then((res)=>{
+        const commonClassObj = writeAtomicClass(res)
+        const collectAtomicClassPath = path.join(process.cwd(), 'atomic.log')
+        return new Promise((resolve, reject) => {
+          fs.writeFile(collectAtomicClassPath, JSON.stringify(commonClassObj), (err) => {
+            err ? reject(err) : resolve()
+          })
+        })
+      })
+    })
+  }
+
+  return new Promise((resolve, reject)=>{
+    resolve({
+      msg,
+      errno
+    })
+  })
+}
 module.exports = {
   init,
-  getCommonClass
+  getCommonClass,
+  extractAtomicClass
 }

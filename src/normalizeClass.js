@@ -54,8 +54,6 @@ const normalizeClass = async (files,commonClass,importClass,commonStyle,cssName)
       const fileLength = file.split('/').length
       const classLength = path.join(importClass,`${commonStyle}.${cssName}`).split('/').length
       const len = initDeep(fileLength,classLength)
-      console.log('`${len}${commonStyle}.${cssName}`',`${len}${commonStyle}.${cssName}`)
-      console.log('commonClass',commonClass)
       fs.readFile(file, (err,data)=>{
         if(err) throw err
         postcss(postCssNormallize({

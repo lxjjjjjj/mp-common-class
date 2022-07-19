@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const program = require('commander')
 const pkg = require('../package.json')
-const { init } = require('../src/index')
+const { init, extractAtomicClass } = require('../src/index')
 const chalk = require('chalk')
 
 const log = console.log
@@ -11,15 +11,22 @@ program
   .arguments('[args...]')
   .option('-m, --main', 'collect main and subpackage class', false)
   .option('-s, --subPackage', 'collect subpackage class', false)
+  .option('-e, --extract', 'collect subpackage atomic class', false)
   .action(async (args, options) => {
     const mainPackage = options.main
     const subPackage = options.subPackage
-    const [ commonStyle, fileRoot, cssName, specSubPackage ] = args
+    const extract = options.extract
+    const [ fileRoot, cssName, specSubPackage, commonStyle ] = args
     let specSubPackageList = []
     specSubPackage && (specSubPackageList = specSubPackage.split(','))
     log(chalk.yellow('==========mp-common-class compile start=========='))
     console.time('mp-common-class build time')
-    const rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage:specSubPackageList })
+    let rs = null
+    if (extract) {
+      rs = await extractAtomicClass({ fileRoot, specSubPackage, cssName })
+    } else {
+      rs = await init({ commonStyle, fileRoot, cssName, mainPackage, subPackage, specSubPackage:specSubPackageList })
+    }
     log(chalk.yellow('==========mp-common-class compile end=========='))
     console.timeEnd('mp-common-class build time')
     if (rs.errno !== 0) {
