@@ -52,13 +52,17 @@ const postCssAtomicCollect = (options = {})  => {
     Rule(node) {
       if(node.parent.type === 'root'){
         node.nodes.forEach((rule)=>{
-          let commonRule = ''
           const trasferClass = handleTransCompoundtoSingle(rule.prop, rule.value)
-          trasferClass && Object.keys(trasferClass).forEach(key => {
-            commonRule += key + ' : '
-            commonRule += trasferClass[key] + ' : '
-          })
-          classCollection.push(commonRule)
+          if(trasferClass) {
+            Object.keys(trasferClass).forEach(key => {
+              let commonRule = ''
+              commonRule += key + ' : '
+              commonRule += trasferClass[key] + ' : '
+              classCollection.push(commonRule)
+            })
+          } else {
+            classCollection.push(`${rule.prop} : ${rule.value}`)
+          }
         })
       }
     },
@@ -66,26 +70,34 @@ const postCssAtomicCollect = (options = {})  => {
       media: (atRule) => {
         atRule.nodes.forEach((rule)=>{
           rule.nodes.forEach((node)=>{
-            let commonRule = ''
             const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
-            trasferClass && Object.keys(trasferClass).forEach(key => {
-              commonRule += key + ' : '
-              commonRule += trasferClass[key] + ' : '
-            })
-            classCollection.push(commonRule)
+            if(trasferClass) {
+              Object.keys(trasferClass).forEach(key => {
+                let commonRule = ''
+                commonRule += key + ' : '
+                commonRule += trasferClass[key] + ' : '
+                classCollection.push(commonRule)
+              })
+            } else {
+              classCollection.push(`${rule.prop} : ${rule.value}`)
+            }
           })
         })
       },
       keyframes: (atRule) => {
         atRule.nodes.forEach((rule)=>{
           rule.nodes.forEach((node)=>{
-            let commonRule = ''
             const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
-            trasferClass && Object.keys(trasferClass).forEach(key => {
-              commonRule += key + ' : '
-              commonRule += trasferClass[key] + ' : '
-            })
-            classCollection.push(commonRule)
+            if(trasferClass) {
+              Object.keys(trasferClass).forEach(key => {
+                let commonRule = ''
+                commonRule += key + ' : '
+                commonRule += trasferClass[key] + ' : '
+                classCollection.push(commonRule)
+              })
+            } else {
+              classCollection.push(`${rule.prop} : ${rule.value}`)
+            }
           })
         })
       }
