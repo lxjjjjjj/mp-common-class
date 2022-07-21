@@ -1,6 +1,6 @@
 const postcss = require('postcss');
 const fs = require('fs');
-
+const { handleTransCompoundtoSingle } = require('./transfer')
 /**
  * 收集文件中所有原子类class节点
  * @param Files 不同分包或者主包下的文件
@@ -53,8 +53,11 @@ const postCssAtomicCollect = (options = {})  => {
       if(node.parent.type === 'root'){
         node.nodes.forEach((rule)=>{
           let commonRule = ''
-          commonRule += rule.prop + ' : '
-          commonRule += rule.value
+          const trasferClass = handleTransCompoundtoSingle(rule.prop, rule.value)
+          Object.keys(trasferClass).forEach(key => {
+            commonRule += key + ' : '
+            commonRule += trasferClass[key] + ' : '
+          })
           classCollection.push(commonRule)
         })
       }
@@ -64,8 +67,11 @@ const postCssAtomicCollect = (options = {})  => {
         atRule.nodes.forEach((rule)=>{
           rule.nodes.forEach((node)=>{
             let commonRule = ''
-            commonRule += node.prop + ' : '
-            commonRule += node.value
+            const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
+            Object.keys(trasferClass).forEach(key => {
+              commonRule += key + ' : '
+              commonRule += trasferClass[key] + ' : '
+            })
             classCollection.push(commonRule)
           })
         })
@@ -74,8 +80,11 @@ const postCssAtomicCollect = (options = {})  => {
         atRule.nodes.forEach((rule)=>{
           rule.nodes.forEach((node)=>{
             let commonRule = ''
-            commonRule += node.prop + ' : '
-            commonRule += node.value
+            const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
+            Object.keys(trasferClass).forEach(key => {
+              commonRule += key + ' : '
+              commonRule += trasferClass[key] + ' : '
+            })
             classCollection.push(commonRule)
           })
         })
