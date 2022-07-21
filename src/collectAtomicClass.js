@@ -54,7 +54,7 @@ const postCssAtomicCollect = (options = {})  => {
         node.nodes.forEach((rule)=>{
           let commonRule = ''
           const trasferClass = handleTransCompoundtoSingle(rule.prop, rule.value)
-          Object.keys(trasferClass).forEach(key => {
+          trasferClass && Object.keys(trasferClass).forEach(key => {
             commonRule += key + ' : '
             commonRule += trasferClass[key] + ' : '
           })
@@ -68,7 +68,7 @@ const postCssAtomicCollect = (options = {})  => {
           rule.nodes.forEach((node)=>{
             let commonRule = ''
             const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
-            Object.keys(trasferClass).forEach(key => {
+            trasferClass && Object.keys(trasferClass).forEach(key => {
               commonRule += key + ' : '
               commonRule += trasferClass[key] + ' : '
             })
@@ -81,7 +81,7 @@ const postCssAtomicCollect = (options = {})  => {
           rule.nodes.forEach((node)=>{
             let commonRule = ''
             const trasferClass = handleTransCompoundtoSingle(node.prop, node.value)
-            Object.keys(trasferClass).forEach(key => {
+            trasferClass && Object.keys(trasferClass).forEach(key => {
               commonRule += key + ' : '
               commonRule += trasferClass[key] + ' : '
             })
