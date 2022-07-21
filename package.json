@@ -1,6 +1,6 @@
 {
   "name": "mp-common-class",
-  "version": "1.0.0-beta29",
+  "version": "1.0.0-beta30",
   "description": "一个可以提取形如微信小程序项目目录中公共样式的脚本",
   "main": "src/index.js",
   "scripts": {
@@ -27,9 +27,11 @@
     "chalk": "^4.1.0",
     "commander": "^8.3.0",
     "fast-glob": "^3.2.7",
-    "postcss": "^8.4.5",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-uglify": "6.0.4"
+  },
+  "dependencies": {
+    "postcss": "^8.4.5"
   }
 }
